@@ -2,6 +2,8 @@ package com.example.universityapp.di
 
 import com.example.universityapp.common.Constant.BASE_URL
 import com.example.universityapp.data.remote.UniversityApi
+import com.example.universityapp.data.repository.UniversityRepository
+import com.example.universityapp.data.repository.UniversityRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,6 +35,13 @@ object AppModule {
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(UniversityApi::class.java)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideRepository(api: UniversityApi): UniversityRepository {
+        return UniversityRepositoryImpl(api)
     }
 
 }

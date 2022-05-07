@@ -1,6 +1,6 @@
 package com.example.universityapp.data.model.university
 
-data class Data(
+data class UniversityModel(
     val id: Int,
     val lat: Double,
     val lng: Double,

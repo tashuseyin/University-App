@@ -7,5 +7,6 @@
     <string name="maps">Harita</string>
     <string name="university_map_label">Üniversiteler - Harita</string>
     <string name="short_details">[Short Details]</string>
+    <string name="image">image</string>
 
 </resources>
