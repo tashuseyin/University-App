@@ -19,8 +19,9 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() {
 
-    private val sharedViewModel: SharedViewModel by viewModels()
+    private var globalToken: String? = null
     private val universityListViewModel: UniversityListViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
 
     override val bindingInflater: (LayoutInflater) -> ViewBinding
         get() = FragmentUniversityListBinding::inflate
@@ -28,12 +29,11 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        observeViewModel()
+        observeGlobalToken()
     }
 
-    private fun observeViewModel() {
+    private fun observeGlobalToken() {
         lifecycleScope.launch {
-            sharedViewModel.getGlobalCoins()
             sharedViewModel.tokenState.observe(viewLifecycleOwner) { tokenResult ->
                 when (tokenResult) {
                     is Resource.Loading -> {
@@ -43,11 +43,30 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
                         binding.errorTextView.text = tokenResult.message
                     }
                     is Resource.Success -> {
-                        val data = tokenResult.data
+                        globalToken = "Bearer" + tokenResult.data!!.access_token
+                        observeUniversityData(globalToken!!)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeUniversityData(authorization: String) {
+        lifecycleScope.launch {
+            universityListViewModel.getUniversityList(authorization)
+            universityListViewModel.universityListState.observe(viewLifecycleOwner) { universityDataResult ->
+                when (universityDataResult) {
+                    is Resource.Loading -> {
+                        binding.progressbar.isVisible = true
+                    }
+                    is Resource.Error -> {
+                        binding.errorTextView.text = universityDataResult.message
+                    }
+                    is Resource.Success -> {
+                        val data = universityDataResult.data
                         print(data)
                     }
                 }
-
             }
         }
     }

@@ -18,9 +18,10 @@ class UniversityListViewModel @Inject constructor(
     val universityListState get() = _universityListState
 
     suspend fun getUniversityList(authorization: String) {
+        _universityListState.value = Resource.Loading()
         try {
             val response = repository.getUniversityList(authorization)
-            _universityListState.value = Resource.Success(response.data)
+            _universityListState.value = Resource.Success(response.body()!!.data)
         } catch (e: Exception) {
             _universityListState.value =
                 Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
