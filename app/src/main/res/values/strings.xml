@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">University App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="list">Liste</string>
+    <string name="university_list_label">Üniversiteler</string>
+    <string name="maps">Harita</string>
+    <string name="university_map_label">Üniversiteler - Harita</string>
+
+</resources>
