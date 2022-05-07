@@ -1,19 +1,13 @@
-package com.example.universityapp.data.remote
+package com.example.universityapp.data.repository
 
 import com.example.universityapp.data.model.token.TokenData
 import com.example.universityapp.data.model.university.UniversityData
-import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.POST
 import retrofit2.http.QueryMap
 
-interface UniversityApi {
+interface UniversityRepository {
 
-    @POST("oauth/token")
     suspend fun getGlobalToken(@QueryMap queries: Map<String, String>): TokenData
 
-    @GET("university")
-    suspend fun getUniversityList(@Header("authorization") Authorization: String) : UniversityData
-
-
+    suspend fun getUniversityList(@Header("authorization") Authorization: String): UniversityData
 }

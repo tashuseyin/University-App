@@ -6,5 +6,6 @@
     <string name="university_list_label">Üniversiteler</string>
     <string name="maps">Harita</string>
     <string name="university_map_label">Üniversiteler - Harita</string>
+    <string name="short_details">[Short Details]</string>
 
 </resources>
