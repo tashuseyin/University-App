@@ -9,7 +9,6 @@ import com.example.universityapp.data.model.token.TokenData
 import com.example.universityapp.data.repository.UniversityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
@@ -26,33 +25,14 @@ class SharedViewModel @Inject constructor(
     private val _tokenState: MutableLiveData<Resource<TokenData>> = MutableLiveData()
     val tokenState get() = _tokenState
 
-    private suspend fun getGlobalToken() {
+    suspend fun getGlobalToken() {
         _tokenState.value = Resource.Loading()
         try {
             val response = repository.getGlobalToken(applyTokenQueries())
-            _tokenState.value = handleGlobalToken(response)
+            _tokenState.value = Resource.Success(response.body()!!)
         } catch (e: Exception) {
             _tokenState.value =
                 Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
-        }
-    }
-
-    private suspend fun handleGlobalToken(response: Response<TokenData>): Resource<TokenData> {
-        return when {
-            response.message().toString().contains("timeout") -> {
-                Resource.Error("Timeout")
-            }
-            response.code() == 401 -> {
-                getGlobalToken()
-                Resource.Loading()
-            }
-            response.isSuccessful -> {
-                val globalToken = response.body()
-                Resource.Success(globalToken!!)
-            }
-            else -> {
-                Resource.Error(response.message())
-            }
         }
     }
 

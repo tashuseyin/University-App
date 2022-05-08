@@ -14,7 +14,7 @@ interface UniversityApi {
     suspend fun getGlobalToken(@QueryMap queries: Map<String, String>): Response<TokenData>
 
     @GET("university")
-    suspend fun getUniversityList(@Header("authorization") Authorization: String) : Response<UniversityData>
+    suspend fun getUniversityList(@Header("authorization") Authorization: String): Response<UniversityData>
 
 
 }
