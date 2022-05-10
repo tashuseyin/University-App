@@ -14,19 +14,20 @@ class MainViewModel @Inject constructor(
     private val repository: UniversityRepository
 ) : ViewModel() {
 
-    private val _token: MutableLiveData<Resource<TokenData>> = MutableLiveData()
-    val token get() = _token
+    private val _tokenResponse: MutableLiveData<Resource<TokenData>> = MutableLiveData()
+    val tokenResponse get() = _tokenResponse
 
     suspend fun getGlobalToken() {
-        _token.value = Resource.Loading()
+        _tokenResponse.value = Resource.Loading()
         try {
             val response = repository.getGlobalToken(applyTokenQueries())
-            _token.value = Resource.Success(response.body()!!)
+            _tokenResponse.value = Resource.Success(response.body()!!)
         } catch (e: Exception) {
-            _token.value =
+            _tokenResponse.value =
                 Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
         }
     }
+
 
     private fun applyTokenQueries(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()

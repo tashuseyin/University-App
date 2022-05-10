@@ -29,7 +29,7 @@ class SplashActivity : AppCompatActivity() {
     private fun requestGlobalToken() {
         lifecycleScope.launch {
             mainViewModel.getGlobalToken()
-            mainViewModel.token.observe(this@SplashActivity) { result ->
+            mainViewModel.tokenResponse.observe(this@SplashActivity) { result ->
                 when (result) {
                     is Resource.Success -> {
                         val token = Constant.BEARER + result.data!!.access_token

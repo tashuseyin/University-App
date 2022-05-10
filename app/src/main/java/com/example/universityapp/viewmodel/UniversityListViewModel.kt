@@ -1,4 +1,4 @@
-package com.example.universityapp.presentation.university_list
+package com.example.universityapp.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,16 +14,16 @@ class UniversityListViewModel @Inject constructor(
     private val repository: UniversityRepository
 ) : ViewModel() {
 
-    private val _universityListState: MutableLiveData<Resource<UniversityData>> = MutableLiveData()
-    val universityListState get() = _universityListState
+    private val _universityListResponse: MutableLiveData<Resource<UniversityData>> = MutableLiveData()
+    val universityListResponse get() = _universityListResponse
 
     suspend fun getUniversityList(authorization: String) {
-        _universityListState.value = Resource.Loading()
+        _universityListResponse.value = Resource.Loading()
         try {
             val response = repository.getUniversityList(authorization)
-            _universityListState.value = handleUniversityListResponse(response)
+            _universityListResponse.value = handleUniversityListResponse(response)
         } catch (e: Exception) {
-            _universityListState.value =
+            _universityListResponse.value =
                 Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
         }
     }
