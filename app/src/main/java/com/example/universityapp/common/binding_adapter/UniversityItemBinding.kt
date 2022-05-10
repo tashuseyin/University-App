@@ -27,7 +27,7 @@ class UniversityItemBinding {
             when (view) {
                 is ImageView -> {
                     view.isVisible =
-                        universityListApiResponse is Resource.Error && globalTokenApiResponse is Resource.Error
+                        universityListApiResponse is Resource.Error || globalTokenApiResponse is Resource.Error
                 }
 
                 is ProgressBar -> {
@@ -37,7 +37,7 @@ class UniversityItemBinding {
 
                 is TextView -> {
                     view.isVisible =
-                        universityListApiResponse is Resource.Error && globalTokenApiResponse is Resource.Error
+                        universityListApiResponse is Resource.Error || globalTokenApiResponse is Resource.Error
                     view.text = universityListApiResponse?.message.toString()
                 }
             }

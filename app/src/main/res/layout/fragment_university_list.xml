@@ -7,10 +7,6 @@
     <data>
 
         <variable
-            name="universityListViewModel"
-            type="com.example.universityapp.viewmodel.UniversityListViewModel" />
-
-        <variable
             name="mainViewModel"
             type="com.example.universityapp.viewmodel.MainViewModel" />
     </data>
@@ -34,7 +30,7 @@
         <ProgressBar
             android:id="@+id/progressbar"
             readRefreshGlobalTokenApiResponse="@{mainViewModel.tokenResponse}"
-            readUniversityListApiResponse="@{universityListViewModel.universityListResponse}"
+            readUniversityListApiResponse="@{mainViewModel.universityListResponse}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -46,7 +42,7 @@
         <ImageView
             android:id="@+id/error_image"
             readRefreshGlobalTokenApiResponse="@{mainViewModel.tokenResponse}"
-            readUniversityListApiResponse="@{universityListViewModel.universityListResponse}"
+            readUniversityListApiResponse="@{mainViewModel.universityListResponse}"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:alpha="0.5"
@@ -61,7 +57,7 @@
         <TextView
             android:id="@+id/error_text"
             readRefreshGlobalTokenApiResponse="@{mainViewModel.tokenResponse}"
-            readUniversityListApiResponse="@{universityListViewModel.universityListResponse}"
+            readUniversityListApiResponse="@{mainViewModel.universityListResponse}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"

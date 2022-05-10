@@ -41,6 +41,15 @@ class SplashActivity : AppCompatActivity() {
                             startActivity(it)
                         }
                     }
+
+                    is Resource.Error -> {
+                        Intent(
+                            this@SplashActivity,
+                            MainActivity::class.java
+                        ).also {
+                            startActivity(it)
+                        }
+                    }
                 }
             }
         }

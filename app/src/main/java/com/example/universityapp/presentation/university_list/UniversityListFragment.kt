@@ -12,14 +12,12 @@ import com.example.universityapp.common.Resource
 import com.example.universityapp.databinding.FragmentUniversityListBinding
 import com.example.universityapp.presentation.university_list.adapter.UniversityListAdapter
 import com.example.universityapp.viewmodel.MainViewModel
-import com.example.universityapp.viewmodel.UniversityListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() {
-    private val universityListViewModel: UniversityListViewModel by viewModels()
     private val mainViewModel: MainViewModel by viewModels()
     private val adapter = UniversityListAdapter()
 
@@ -29,7 +27,6 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
-        binding.universityListViewModel = universityListViewModel
         binding.mainViewModel = mainViewModel
 
         val globalToken = requireActivity().intent.getStringExtra(Constant.GLOBAL_TOKEN)
@@ -38,8 +35,8 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
 
     private fun requestUniversityData(token: String) {
         lifecycleScope.launch {
-            universityListViewModel.getUniversityList(token)
-            universityListViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
+            mainViewModel.getUniversityList(token)
+            mainViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Resource.Error -> {
                         if (result.message == "Token Expire") {
