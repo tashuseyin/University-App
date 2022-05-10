@@ -14,7 +14,7 @@ class UniversityRepositoryImpl @Inject constructor(
         return api.getGlobalToken(queries)
     }
 
-    override suspend fun getUniversityList(Authorization: String): Response<UniversityData> {
-        return api.getUniversityList(Authorization)
+    override suspend fun getUniversityList(authorization: String): Response<UniversityData> {
+        return api.getUniversityList(authorization)
     }
 }

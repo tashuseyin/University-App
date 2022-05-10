@@ -10,35 +10,34 @@ import com.example.universityapp.R
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.presentation.MainActivity
-import com.example.universityapp.viewmodel.SharedViewModel
+import com.example.universityapp.viewmodel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
-
-    private val sharedViewModel: SharedViewModel by viewModels()
+    private val mainViewModel: MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
-        lifecycleScope.launch {
-            delay(1500)
-            observeGlobalToken()
-        }
+        requestGlobalToken()
     }
 
-    private fun observeGlobalToken() {
+
+    private fun requestGlobalToken() {
         lifecycleScope.launch {
-            sharedViewModel.tokenState.observe(this@SplashActivity) { tokenResult ->
-                when (tokenResult) {
+            mainViewModel.getGlobalToken()
+            mainViewModel.token.observe(this@SplashActivity) { result ->
+                when (result) {
                     is Resource.Success -> {
-                        val globalToken = "Bearer" + tokenResult.data!!.access_token
-                        Intent(this@SplashActivity, MainActivity::class.java).also {
-                            it.putExtra(Constant.GLOBAL_TOKEN, globalToken)
+                        val token = Constant.BEARER + result.data!!.access_token
+                        Intent(
+                            this@SplashActivity,
+                            MainActivity::class.java
+                        ).also {
+                            it.putExtra(Constant.GLOBAL_TOKEN, token)
                             startActivity(it)
                         }
                     }
@@ -46,4 +45,5 @@ class SplashActivity : AppCompatActivity() {
             }
         }
     }
+
 }

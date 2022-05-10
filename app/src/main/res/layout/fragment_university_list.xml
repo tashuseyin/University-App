@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/error_imageView"
+        android:id="@+id/error_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:alpha="0.5"
@@ -42,15 +42,14 @@
         app:layout_constraintTop_toTopOf="@+id/recyclerview" />
 
     <TextView
-        android:id="@+id/error_textView"
+        android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:alpha="0.5"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="@+id/error_imageView"
-        app:layout_constraintStart_toStartOf="@+id/error_imageView"
-        app:layout_constraintTop_toBottomOf="@+id/error_imageView" />
+        app:layout_constraintEnd_toEndOf="@+id/error_image"
+        app:layout_constraintStart_toStartOf="@+id/error_image"
+        app:layout_constraintTop_toBottomOf="@+id/error_image" />
 </androidx.constraintlayout.widget.ConstraintLayout>

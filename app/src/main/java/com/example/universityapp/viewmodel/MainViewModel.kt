@@ -2,36 +2,28 @@ package com.example.universityapp.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.data.model.token.TokenData
 import com.example.universityapp.data.repository.UniversityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class SharedViewModel @Inject constructor(
+class MainViewModel @Inject constructor(
     private val repository: UniversityRepository
 ) : ViewModel() {
 
-    init {
-        viewModelScope.launch {
-            getGlobalToken()
-        }
-    }
-
-    private val _tokenState: MutableLiveData<Resource<TokenData>> = MutableLiveData()
-    val tokenState get() = _tokenState
+    private val _token: MutableLiveData<Resource<TokenData>> = MutableLiveData()
+    val token get() = _token
 
     suspend fun getGlobalToken() {
-        _tokenState.value = Resource.Loading()
+        _token.value = Resource.Loading()
         try {
             val response = repository.getGlobalToken(applyTokenQueries())
-            _tokenState.value = Resource.Success(response.body()!!)
+            _token.value = Resource.Success(response.body()!!)
         } catch (e: Exception) {
-            _tokenState.value =
+            _token.value =
                 Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
         }
     }
