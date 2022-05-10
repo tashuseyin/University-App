@@ -1,4 +1,4 @@
-package com.example.universityapp.common
+package com.example.universityapp.common.binding_adapter
 
 import android.view.View
 import android.widget.ImageView
@@ -6,6 +6,7 @@ import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.view.isVisible
 import androidx.databinding.BindingAdapter
+import com.example.universityapp.common.Resource
 import com.example.universityapp.data.model.token.TokenData
 import com.example.universityapp.data.model.university.UniversityData
 

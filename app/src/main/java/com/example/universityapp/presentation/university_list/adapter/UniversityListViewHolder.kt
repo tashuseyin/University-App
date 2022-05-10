@@ -9,10 +9,7 @@ class UniversityListViewHolder(private val binding: UniversityItemCardBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
     fun bind(universityItem: UniversityItem) {
-        binding.universityImage.load(universityItem.url) {
-            crossfade(600)
-        }
-        binding.universityTitle.text = universityItem.name
-        binding.universityShortDetail.text = universityItem.shortDetail
+        binding.result = universityItem
+        binding.executePendingBindings()
     }
 }
