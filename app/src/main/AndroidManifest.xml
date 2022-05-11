@@ -19,7 +19,7 @@
             android:exported="false"
             android:theme="@style/Theme.UniversityApp" />
         <activity
-            android:name=".presentation.splash.SplashActivity"
+            android:name="com.example.universityapp.presentation.ui.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

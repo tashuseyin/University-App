@@ -1,4 +1,4 @@
-package com.example.universityapp.presentation.university_list.adapter
+package com.example.universityapp.presentation.ui.university_list.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

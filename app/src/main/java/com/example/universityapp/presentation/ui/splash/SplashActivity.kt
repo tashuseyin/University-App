@@ -1,4 +1,4 @@
-package com.example.universityapp.presentation.splash
+package com.example.universityapp.presentation.ui.splash
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -10,14 +10,14 @@ import com.example.universityapp.R
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.presentation.MainActivity
-import com.example.universityapp.viewmodel.MainViewModel
+import com.example.universityapp.viewmodel.UniversityListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: UniversityListViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

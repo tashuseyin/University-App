@@ -2,11 +2,15 @@
     <string name="app_name">University App</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="list">Liste</string>
-    <string name="university_list_label">Üniversiteler</string>
-    <string name="maps">Harita</string>
-    <string name="university_map_label">Üniversiteler - Harita</string>
+    <string name="list">List</string>
+    <string name="university_list_label">Universities</string>
+    <string name="maps">Map</string>
+    <string name="university_map_label">Universities - Maps</string>
     <string name="lorem_ipsum">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry\'s standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</string>
     <string name="image">image</string>
+    <string name="login_page_label">Member Login</string>
+    <string name="password">Password</string>
+    <string name="login">Logın</string>
+    <string name="email">Email</string>
 
 </resources>

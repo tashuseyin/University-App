@@ -7,12 +7,29 @@
 
     <fragment
         android:id="@+id/university_list"
-        android:name="com.example.universityapp.presentation.university_list.UniversityListFragment"
+        android:name="com.example.universityapp.presentation.ui.university_list.UniversityListFragment"
         android:label="@string/university_list_label"
-        tools:layout="@layout/fragment_university_list" />
+        tools:layout="@layout/fragment_university_list" >
+        <action
+            android:id="@+id/action_university_list_to_university_detail"
+            app:destination="@id/university_detail" />
+        <action
+            android:id="@+id/action_university_list_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
     <fragment
-        android:id="@+id/university_map"
-        android:name="com.example.universityapp.presentation.university_detail.UniversityDetailFragment"
+        android:id="@+id/university_detail"
+        android:name="com.example.universityapp.presentation.ui.university_detail.UniversityDetailFragment"
         android:label="@string/university_map_label"
         tools:layout="@layout/fragment_university_detail" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.universityapp.presentation.ui.login_page.LoginFragment"
+        android:label="@string/login_page_label"
+        tools:layout="@layout/fragment_login" />
+    <fragment
+        android:id="@+id/university_map"
+        android:name="com.example.universityapp.presentation.ui.university_map.UniversityMapFragment"
+        android:label="@string/university_map_label"
+        tools:layout="@layout/fragment_universtiy_map" />
 </navigation>

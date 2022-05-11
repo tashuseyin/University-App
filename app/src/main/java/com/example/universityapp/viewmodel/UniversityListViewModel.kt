@@ -20,7 +20,7 @@ import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(
+class UniversityListViewModel @Inject constructor(
     application: Application,
     private val dataStoreRepository: DataStoreRepository,
     private val repository: UniversityRepository

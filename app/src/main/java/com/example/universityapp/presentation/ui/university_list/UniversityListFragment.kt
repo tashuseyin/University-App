@@ -1,4 +1,4 @@
-package com.example.universityapp.presentation.university_list
+package com.example.universityapp.presentation.ui.university_list
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,15 +11,15 @@ import com.example.universityapp.common.BindingFragment
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.databinding.FragmentUniversityListBinding
-import com.example.universityapp.presentation.university_list.adapter.UniversityListAdapter
-import com.example.universityapp.viewmodel.MainViewModel
+import com.example.universityapp.presentation.ui.university_list.adapter.UniversityListAdapter
+import com.example.universityapp.viewmodel.UniversityListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
 class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() {
-    private val mainViewModel: MainViewModel by viewModels()
+    private val mainViewModel: UniversityListViewModel by viewModels()
     private val adapter = UniversityListAdapter()
 
     override val bindingInflater: (LayoutInflater) -> ViewBinding
@@ -45,7 +45,6 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             mainViewModel.getUniversityList(token)
             mainViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Resource.Loading -> binding.progressbar.isVisible = true
                     is Resource.Error -> {
                         if (result.message == "Token Expire") {
                             binding.errorImage.isVisible = false
@@ -74,7 +73,6 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             mainViewModel.getGlobalToken()
             mainViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
-                    is Resource.Loading -> binding.progressbar.isVisible = true
                     is Resource.Error -> {
                         binding.progressbar.isVisible = false
                         binding.errorText.text = result.message
