@@ -2,14 +2,13 @@ package com.example.universityapp.presentation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.universityapp.R
-import com.example.universityapp.common.Constant
-import com.example.universityapp.data.model.token.TokenData
 import com.example.universityapp.databinding.ActivityMainBinding
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -33,5 +32,18 @@ class MainActivity : AppCompatActivity() {
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
+    }
+
+    override fun onSupportNavigateUp(): Boolean {
+        showBottomNavigation()
+        return navController.navigateUp() || super.onSupportNavigateUp()
+    }
+
+    fun showBottomNavigation() {
+        binding.bottomNavigation.isVisible = true
+    }
+
+    fun hideBottomNavigation() {
+        binding.bottomNavigation.isVisible = false
     }
 }

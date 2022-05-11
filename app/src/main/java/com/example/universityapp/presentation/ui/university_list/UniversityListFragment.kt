@@ -12,6 +12,7 @@ import com.example.universityapp.common.BindingFragment
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.databinding.FragmentUniversityListBinding
+import com.example.universityapp.presentation.MainActivity
 import com.example.universityapp.presentation.ui.university_list.adapter.UniversityListAdapter
 import com.example.universityapp.viewmodel.SharedViewModel
 import com.example.universityapp.viewmodel.UniversityListViewModel
@@ -39,6 +40,7 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
         sharedViewModel.readLoginStatus.observe(viewLifecycleOwner) { loginStatus ->
             adapter.onItemClickListener = { uniId ->
                 if (loginStatus) {
+                    (activity as MainActivity).hideBottomNavigation()
                     findNavController().navigate(
                         UniversityListFragmentDirections.actionUniversityListToLoginFragment(
                             uniId
