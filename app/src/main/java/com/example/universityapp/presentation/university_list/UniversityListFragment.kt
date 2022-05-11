@@ -27,8 +27,6 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.lifecycleOwner = this
-        binding.mainViewModel = mainViewModel
 
         val globalToken = requireActivity().intent.getStringExtra(Constant.GLOBAL_TOKEN)
         requestUniversityData(globalToken.toString())
@@ -39,18 +37,20 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             mainViewModel.getUniversityList(token)
             mainViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
+                    is Resource.Loading -> binding.progressbar.isVisible = true
                     is Resource.Error -> {
-                        binding.apply {
-                            errorImage.isVisible = true
-                            errorText.isVisible = true
-                            if (result.message == "Token Expire") {
-                                errorImage.isVisible = false
-                                errorText.isVisible = false
-                                requestGlobalToken()
-                            }
+                        if (result.message == "Token Expire") {
+                            binding.errorImage.isVisible = false
+                            binding.errorText.isVisible = false
+                            requestGlobalToken()
+                        } else {
+                            binding.progressbar.isVisible = false
+                            binding.errorImage.isVisible = true
+                            binding.errorText.text = result.message
                         }
                     }
                     is Resource.Success -> {
+                        binding.progressbar.isVisible = false
                         adapter.setData(result.data!!.data!!.filter {
                             it.url!!.isNotEmpty()
                         })
@@ -66,12 +66,14 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             mainViewModel.getGlobalToken()
             mainViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
+                    is Resource.Loading -> binding.progressbar.isVisible = true
                     is Resource.Error -> {
-                        binding.errorImage.isVisible = true
-                        binding.errorText.isVisible = true
+                        binding.progressbar.isVisible = false
                         binding.errorText.text = result.message
+                        binding.errorImage.isVisible = true
                     }
                     is Resource.Success -> {
+                        binding.progressbar.isVisible = false
                         val token = Constant.BEARER + result.data!!.access_token
                         requestUniversityData(token)
                     }
@@ -79,6 +81,5 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             }
         }
     }
-
 }
 
