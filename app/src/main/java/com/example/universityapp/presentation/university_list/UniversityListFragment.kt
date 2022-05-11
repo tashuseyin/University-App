@@ -3,6 +3,7 @@ package com.example.universityapp.presentation.university_list
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.viewbinding.ViewBinding
@@ -39,8 +40,14 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             mainViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Resource.Error -> {
-                        if (result.message == "Token Expire") {
-                            requestGlobalToken()
+                        binding.apply {
+                            errorImage.isVisible = true
+                            errorText.isVisible = true
+                            if (result.message == "Token Expire") {
+                                errorImage.isVisible = false
+                                errorText.isVisible = false
+                                requestGlobalToken()
+                            }
                         }
                     }
                     is Resource.Success -> {
@@ -58,9 +65,16 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
         lifecycleScope.launch {
             mainViewModel.getGlobalToken()
             mainViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
-                if (result is Resource.Success) {
-                    val token = Constant.BEARER + result.data!!.access_token
-                    requestUniversityData(token)
+                when (result) {
+                    is Resource.Error -> {
+                        binding.errorImage.isVisible = true
+                        binding.errorText.isVisible = true
+                        binding.errorText.text = result.message
+                    }
+                    is Resource.Success -> {
+                        val token = Constant.BEARER + result.data!!.access_token
+                        requestUniversityData(token)
+                    }
                 }
             }
         }
