@@ -10,7 +10,7 @@ import com.example.universityapp.util.UniversitiesDiffUtil
 
 class UniversityListAdapter : RecyclerView.Adapter<UniversityListViewHolder>() {
     private var universityList = emptyList<UniversityItem>()
-    var onItemClickListener: ((Int) -> Unit)? = null
+    var onItemClickListener: ((Int, String) -> Unit)? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UniversityListViewHolder {
         val binding =

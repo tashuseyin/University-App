@@ -10,7 +10,9 @@
     <string name="image">image</string>
     <string name="login_page_label">Member Login</string>
     <string name="password">Password</string>
-    <string name="login">Logın</string>
-    <string name="email">Email</string>
+    <string name="login">LOGIN</string>
+    <string name="username">Username</string>
+    <string name="error_message_email">Please enter email.</string>
+    <string name="error_message_password">Please enter password.</string>
 
 </resources>

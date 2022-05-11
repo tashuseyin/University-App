@@ -7,6 +7,9 @@ import androidx.datastore.preferences.preferencesDataStore
 import com.example.universityapp.common.Constant.PREFERENCES_GLOBAL_TOKEN
 import com.example.universityapp.common.Constant.PREFERENCES_LOGIN
 import com.example.universityapp.common.Constant.PREFERENCES_NAME
+import com.example.universityapp.common.Constant.PREFERENCES_PASSWORD
+import com.example.universityapp.common.Constant.PREFERENCES_USERNAME
+import com.example.universityapp.data.model.user_info.UserInfo
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
@@ -26,6 +29,8 @@ class DataStoreRepository @Inject constructor(
     private object PreferenceKeys {
         val token = stringPreferencesKey(PREFERENCES_GLOBAL_TOKEN)
         val loginStatus = booleanPreferencesKey(PREFERENCES_LOGIN)
+        val usernameInfo = stringPreferencesKey(PREFERENCES_USERNAME)
+        val passwordInfo = stringPreferencesKey(PREFERENCES_PASSWORD)
     }
 
     private val dataStore: DataStore<Preferences> = context.dataStore
@@ -55,6 +60,28 @@ class DataStoreRepository @Inject constructor(
         }
     }
 
+    val readUserInfo: Flow<UserInfo> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map {
+            val usernameInfo = it[PreferenceKeys.usernameInfo] ?: ""
+            val passwordInfo = it[PreferenceKeys.passwordInfo] ?: ""
+
+            UserInfo(usernameInfo, passwordInfo)
+        }
+
+    suspend fun saveUserInformation(username: String, password: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.usernameInfo] = username
+            preferences[PreferenceKeys.passwordInfo] = password
+        }
+    }
+
     val readLoginStatus: Flow<Boolean> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {
@@ -67,6 +94,4 @@ class DataStoreRepository @Inject constructor(
             val loginStatus = it[PreferenceKeys.loginStatus] ?: true
             loginStatus
         }
-
-
 }

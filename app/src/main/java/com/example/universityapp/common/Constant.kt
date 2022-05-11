@@ -29,4 +29,6 @@ object Constant {
     const val PREFERENCES_NAME="university_app_preferences"
     const val PREFERENCES_GLOBAL_TOKEN="token"
     const val PREFERENCES_LOGIN = "login_status"
+    const val PREFERENCES_USERNAME = "username_info"
+    const val PREFERENCES_PASSWORD = "password_info"
 }

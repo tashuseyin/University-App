@@ -35,6 +35,12 @@ class SharedViewModel @Inject constructor(
         dataStoreRepository.saveLoginStatus(loginStatus)
     }
 
+    val readUserInfo = dataStoreRepository.readUserInfo
+
+    fun saveUserInfo(username: String, password: String) = viewModelScope.launch {
+        dataStoreRepository.saveUserInformation(username, password)
+    }
+
     private val _tokenResponse: MutableLiveData<Resource<TokenData>> = MutableLiveData()
     val tokenResponse get() = _tokenResponse
 
@@ -62,6 +68,7 @@ class SharedViewModel @Inject constructor(
 
         return queries
     }
+
 
     fun applyLoginTokenQueries(password: String, username: String): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()

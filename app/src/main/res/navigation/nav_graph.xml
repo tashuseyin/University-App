@@ -9,7 +9,7 @@
         android:id="@+id/university_list"
         android:name="com.example.universityapp.presentation.ui.university_list.UniversityListFragment"
         android:label="@string/university_list_label"
-        tools:layout="@layout/fragment_university_list" >
+        tools:layout="@layout/fragment_university_list">
         <action
             android:id="@+id/action_university_list_to_university_detail"
             app:destination="@id/university_detail" />
@@ -20,22 +20,31 @@
     <fragment
         android:id="@+id/university_detail"
         android:name="com.example.universityapp.presentation.ui.university_detail.UniversityDetailFragment"
-        android:label="@string/university_map_label"
-        tools:layout="@layout/fragment_university_detail" >
+        android:label="{uniTitle}"
+        tools:layout="@layout/fragment_university_detail">
+        <argument
+            android:name="uniTitle"
+            app:argType="string" />
         <argument
             android:name="uniId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.example.universityapp.presentation.ui.login_page.LoginFragment"
         android:label="@string/login_page_label"
-        tools:layout="@layout/fragment_login" >
+        tools:layout="@layout/fragment_login">
+        <argument
+            android:name="uniTitle"
+            app:argType="string" />
         <argument
             android:name="uniId"
-            app:argType="integer"
-            android:defaultValue="0" />
+            android:defaultValue="0"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_loginFragment_to_university_detail"
+            app:destination="@id/university_detail" />
     </fragment>
     <fragment
         android:id="@+id/university_map"

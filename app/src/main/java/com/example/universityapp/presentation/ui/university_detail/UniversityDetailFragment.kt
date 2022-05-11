@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import androidx.viewbinding.ViewBinding
-import androidx.viewpager2.widget.ViewPager2
 import com.example.universityapp.R
 import com.example.universityapp.common.BindingFragment
 import com.example.universityapp.databinding.FragmentUniversityDetailBinding
@@ -28,8 +27,6 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
         val adapter = SliderImageAdapter(images)
         binding.viewPager.adapter = adapter
 
-        TabLayoutMediator(binding.tabLayout, binding.viewPager) { tab, position ->
-
-        }.attach()
+        TabLayoutMediator(binding.tabLayout, binding.viewPager) { _, _ -> }.attach()
     }
 }
