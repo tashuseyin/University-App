@@ -12,6 +12,10 @@ object Constant {
     const val QUERY_CLIENT_SECRET = "client_secret"
     const val QUERY_AUTHORIZATION = "authorization"
 
+    const val GRANT_TYPE_VALUE = "global"
+    const val CLIENT_ID_VALUE = "testjwtclientid"
+    const val CLIENT_SECRET_VALUE = "XY7kmzoNzl100"
+
     const val BEARER = "Bearer"
     const val GLOBAL_TOKEN = "global token"
 

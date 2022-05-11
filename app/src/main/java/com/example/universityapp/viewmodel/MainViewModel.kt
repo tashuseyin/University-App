@@ -1,7 +1,11 @@
 package com.example.universityapp.viewmodel
 
+import android.app.Application
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.data.model.token.TokenData
@@ -13,29 +17,34 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
+    application: Application,
     private val repository: UniversityRepository
-) : ViewModel() {
+) : AndroidViewModel(application) {
 
     private val _tokenResponse: MutableLiveData<Resource<TokenData>> = MutableLiveData()
     val tokenResponse get() = _tokenResponse
 
     suspend fun getGlobalToken() {
         _tokenResponse.value = Resource.Loading()
-        try {
-            val response = repository.getGlobalToken(applyTokenQueries())
-            _tokenResponse.value = Resource.Success(response.body()!!)
-        } catch (e: Exception) {
-            _tokenResponse.value =
-                Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
+        if (hasInternetConnection()) {
+            try {
+                val response = repository.getGlobalToken(applyTokenQueries())
+                _tokenResponse.value = Resource.Success(response.body()!!)
+            } catch (e: Exception) {
+                _tokenResponse.value =
+                    Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
+            }
+        } else {
+            _tokenResponse.value = Resource.Error("No Internet Connection.")
         }
     }
 
     private fun applyTokenQueries(): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
 
-        queries[Constant.QUERY_GRANT_TYPE] = "global"
-        queries[Constant.QUERY_CLIENT_ID] = "testjwtclientid"
-        queries[Constant.QUERY_CLIENT_SECRET] = "XY7kmzoNzl100"
+        queries[Constant.QUERY_GRANT_TYPE] = Constant.GRANT_TYPE_VALUE
+        queries[Constant.QUERY_CLIENT_ID] = Constant.CLIENT_ID_VALUE
+        queries[Constant.QUERY_CLIENT_SECRET] = Constant.CLIENT_SECRET_VALUE
 
         return queries
     }
@@ -47,12 +56,16 @@ class MainViewModel @Inject constructor(
 
     suspend fun getUniversityList(authorization: String) {
         _universityListResponse.value = Resource.Loading()
-        try {
-            val response = repository.getUniversityList(authorization)
-            _universityListResponse.value = handleUniversityListResponse(response)
-        } catch (e: Exception) {
-            _universityListResponse.value =
-                Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
+        if (hasInternetConnection()) {
+            try {
+                val response = repository.getUniversityList(authorization)
+                _universityListResponse.value = handleUniversityListResponse(response)
+            } catch (e: Exception) {
+                _universityListResponse.value =
+                    Resource.Error(e.localizedMessage ?: "An unexpected error occurred")
+            }
+        } else {
+            _universityListResponse.value = Resource.Error("No internet connection.")
         }
     }
 
@@ -74,4 +87,17 @@ class MainViewModel @Inject constructor(
         }
     }
 
+    private fun hasInternetConnection(): Boolean {
+        val connectivityManager = getApplication<Application>().getSystemService(
+            Context.CONNECTIVITY_SERVICE
+        ) as ConnectivityManager
+        val activeNetwork = connectivityManager.activeNetwork ?: return false
+        val capabilities = connectivityManager.getNetworkCapabilities(activeNetwork) ?: return false
+        return when {
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR) -> true
+            capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET) -> true
+            else -> false
+        }
+    }
 }
