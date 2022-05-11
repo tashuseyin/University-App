@@ -5,6 +5,7 @@ object Constant {
     const val BASE_URL = "http://193.35.201.138:8080"
     const val TOKEN_AND_LOGIN_URL = "/oauth/token"
     const val UNIVERSITY_URL = "/university"
+    const val UNIVERSITY_DETAIL_URL = "/university/{uniId}"
 
 
     const val QUERY_GRANT_TYPE = "grant_type"

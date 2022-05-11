@@ -11,4 +11,5 @@ class UniversityDetailViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
 
+
 }

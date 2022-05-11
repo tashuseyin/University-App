@@ -39,7 +39,7 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
     private fun navigateFragment() {
         sharedViewModel.readLoginStatus.observe(viewLifecycleOwner) { loginStatus ->
             adapter.onItemClickListener = { uniId ->
-                if (loginStatus) {
+                if (!loginStatus) {
                     (activity as MainActivity).hideBottomNavigation()
                     findNavController().navigate(
                         UniversityListFragmentDirections.actionUniversityListToLoginFragment(
