@@ -23,6 +23,7 @@ class SharedViewModel @Inject constructor(
     private val repository: UniversityRepository
 ) : AndroidViewModel(application) {
 
+
     val readGlobalToken = dataStoreRepository.readToken.asLiveData()
 
     fun saveGlobalToken(globalToken: String) = viewModelScope.launch {
@@ -35,7 +36,7 @@ class SharedViewModel @Inject constructor(
         dataStoreRepository.saveLoginStatus(loginStatus)
     }
 
-    val readUserInfo = dataStoreRepository.readUserInfo
+    val readUserInfo = dataStoreRepository.readUserInfo.asLiveData()
 
     fun saveUserInfo(username: String, password: String) = viewModelScope.launch {
         dataStoreRepository.saveUserInformation(username, password)
@@ -70,7 +71,7 @@ class SharedViewModel @Inject constructor(
     }
 
 
-    fun applyLoginTokenQueries(password: String, username: String): HashMap<String, String> {
+    fun applyLoginTokenQueries(username: String, password: String): HashMap<String, String> {
         val queries: HashMap<String, String> = HashMap()
 
         queries[Constant.QUERY_GRANT_TYPE] = Constant.GRANT_TYPE_LOGIN_VALUE

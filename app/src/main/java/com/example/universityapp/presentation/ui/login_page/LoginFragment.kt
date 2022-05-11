@@ -83,7 +83,7 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                         }
                         is Resource.Success -> {
                             binding.progressbar.isVisible = false
-                            saveUserInfo(username, password)
+                            sharedViewModel.saveUserInfo(username, password)
                             findNavController().navigate(
                                 LoginFragmentDirections.actionLoginFragmentToUniversityDetail(
                                     args.uniTitle,
@@ -95,9 +95,5 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                 }
             }
         }
-    }
-
-    private fun saveUserInfo(username: String, password: String) {
-        sharedViewModel.saveUserInfo(username, password)
     }
 }

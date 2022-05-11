@@ -54,11 +54,32 @@ class DataStoreRepository @Inject constructor(
             token
         }
 
-    suspend fun saveLoginStatus(loginStatus: Boolean) {
+    suspend fun saveLoginStatus(status: Boolean) {
         dataStore.edit { preferences ->
-            preferences[PreferenceKeys.loginStatus] = loginStatus
+            preferences[PreferenceKeys.loginStatus] = status
         }
     }
+
+    val readLoginStatus: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map {
+            val status = it[PreferenceKeys.loginStatus] ?: false
+            status
+        }
+
+    suspend fun saveUserInformation(username: String, password: String) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.usernameInfo] = username
+            preferences[PreferenceKeys.passwordInfo] = password
+        }
+    }
+
 
     val readUserInfo: Flow<UserInfo> = dataStore.data
         .catch { exception ->
@@ -73,25 +94,5 @@ class DataStoreRepository @Inject constructor(
             val passwordInfo = it[PreferenceKeys.passwordInfo] ?: ""
 
             UserInfo(usernameInfo, passwordInfo)
-        }
-
-    suspend fun saveUserInformation(username: String, password: String) {
-        dataStore.edit { preferences ->
-            preferences[PreferenceKeys.usernameInfo] = username
-            preferences[PreferenceKeys.passwordInfo] = password
-        }
-    }
-
-    val readLoginStatus: Flow<Boolean> = dataStore.data
-        .catch { exception ->
-            if (exception is IOException) {
-                emit(emptyPreferences())
-            } else {
-                throw exception
-            }
-        }
-        .map {
-            val loginStatus = it[PreferenceKeys.loginStatus] ?: true
-            loginStatus
         }
 }
