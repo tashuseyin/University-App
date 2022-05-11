@@ -2,13 +2,11 @@ package com.example.universityapp.data.data_store
 
 import android.content.Context
 import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.emptyPreferences
-import androidx.datastore.preferences.core.stringPreferencesKey
+import androidx.datastore.preferences.core.*
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.universityapp.common.Constant.PREFERENCES_GLOBAL_TOKEN
+import com.example.universityapp.common.Constant.PREFERENCES_LOGIN
 import com.example.universityapp.common.Constant.PREFERENCES_NAME
-import com.example.universityapp.common.Constant.PREFERENCES_TOKEN
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.flow.Flow
@@ -26,14 +24,15 @@ class DataStoreRepository @Inject constructor(
 ) {
 
     private object PreferenceKeys {
-        val userToken = stringPreferencesKey(PREFERENCES_TOKEN)
+        val token = stringPreferencesKey(PREFERENCES_GLOBAL_TOKEN)
+        val loginStatus = booleanPreferencesKey(PREFERENCES_LOGIN)
     }
 
     private val dataStore: DataStore<Preferences> = context.dataStore
 
     suspend fun saveToken(token: String) {
         dataStore.edit { preferences ->
-            preferences[PreferenceKeys.userToken] = token
+            preferences[PreferenceKeys.token] = token
         }
     }
 
@@ -46,8 +45,27 @@ class DataStoreRepository @Inject constructor(
             }
         }
         .map {
-            val token = it[PreferenceKeys.userToken] ?: ""
+            val token = it[PreferenceKeys.token] ?: ""
             token
+        }
+
+    suspend fun saveLoginStatus(loginStatus: Boolean) {
+        dataStore.edit { preferences ->
+            preferences[PreferenceKeys.loginStatus] = loginStatus
+        }
+    }
+
+    val readLoginStatus: Flow<Boolean> = dataStore.data
+        .catch { exception ->
+            if (exception is IOException) {
+                emit(emptyPreferences())
+            } else {
+                throw exception
+            }
+        }
+        .map {
+            val loginStatus = it[PreferenceKeys.loginStatus] ?: true
+            loginStatus
         }
 
 

@@ -6,12 +6,14 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.example.universityapp.common.BindingFragment
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.databinding.FragmentUniversityListBinding
 import com.example.universityapp.presentation.ui.university_list.adapter.UniversityListAdapter
+import com.example.universityapp.viewmodel.SharedViewModel
 import com.example.universityapp.viewmodel.UniversityListViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -19,7 +21,8 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() {
-    private val mainViewModel: UniversityListViewModel by viewModels()
+    private val universityListViewModel: UniversityListViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
     private val adapter = UniversityListAdapter()
 
     override val bindingInflater: (LayoutInflater) -> ViewBinding
@@ -29,11 +32,32 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
         super.onViewCreated(view, savedInstanceState)
 
         requestApi()
+        navigateFragment()
+    }
+
+    private fun navigateFragment() {
+        sharedViewModel.readLoginStatus.observe(viewLifecycleOwner) { loginStatus ->
+            adapter.onItemClickListener = { uniId ->
+                if (loginStatus) {
+                    findNavController().navigate(
+                        UniversityListFragmentDirections.actionUniversityListToLoginFragment(
+                            uniId
+                        )
+                    )
+                } else {
+                    findNavController().navigate(
+                        UniversityListFragmentDirections.actionUniversityListToUniversityDetail(
+                            uniId
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private fun requestApi() {
         lifecycleScope.launch {
-            mainViewModel.readGlobalToken.observe(viewLifecycleOwner) { token ->
+            sharedViewModel.readGlobalToken.observe(viewLifecycleOwner) { token ->
                 requestUniversityData(token)
             }
         }
@@ -42,8 +66,8 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
 
     private fun requestUniversityData(token: String) {
         lifecycleScope.launch {
-            mainViewModel.getUniversityList(token)
-            mainViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
+            universityListViewModel.getUniversityList(token)
+            universityListViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Resource.Error -> {
                         if (result.message == "Token Expire") {
@@ -70,8 +94,8 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
 
     private fun requestGlobalToken() {
         lifecycleScope.launch {
-            mainViewModel.getGlobalToken()
-            mainViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
+            sharedViewModel.getGlobalToken(sharedViewModel.applyGlobalTokenQueries())
+            sharedViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Resource.Error -> {
                         binding.progressbar.isVisible = false

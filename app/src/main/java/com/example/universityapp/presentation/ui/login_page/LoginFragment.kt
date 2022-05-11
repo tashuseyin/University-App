@@ -1,20 +1,15 @@
 package com.example.universityapp.presentation.ui.login_page
 
-import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
-import com.example.universityapp.R
+import androidx.viewbinding.ViewBinding
+import com.example.universityapp.common.BindingFragment
+import com.example.universityapp.databinding.FragmentLoginBinding
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class LoginFragment : Fragment() {
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false)
-    }
+class LoginFragment : BindingFragment<FragmentLoginBinding>() {
+    override val bindingInflater: (LayoutInflater) -> ViewBinding
+        get() = FragmentLoginBinding::inflate
+
+
 }

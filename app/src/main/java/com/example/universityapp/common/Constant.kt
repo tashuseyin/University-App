@@ -11,15 +11,21 @@ object Constant {
     const val QUERY_CLIENT_ID = "client_id"
     const val QUERY_CLIENT_SECRET = "client_secret"
     const val QUERY_AUTHORIZATION = "authorization"
+    const val QUERY_USERNAME = "username"
+    const val QUERY_PASSWORD = "password"
 
-    const val GRANT_TYPE_VALUE = "global"
+
+    const val GRANT_TYPE_GLOBAL_VALUE = "global"
     const val CLIENT_ID_VALUE = "testjwtclientid"
     const val CLIENT_SECRET_VALUE = "XY7kmzoNzl100"
+    const val GRANT_TYPE_LOGIN_VALUE = "password"
+
+
 
     const val BEARER = "Bearer"
-    const val GLOBAL_TOKEN = "global token"
 
 
     const val PREFERENCES_NAME="university_app_preferences"
-    const val PREFERENCES_TOKEN="token"
+    const val PREFERENCES_GLOBAL_TOKEN="token"
+    const val PREFERENCES_LOGIN = "login_status"
 }

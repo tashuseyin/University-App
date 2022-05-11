@@ -12,6 +12,7 @@
     </data>
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/university_item_card"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_margin="4dp"

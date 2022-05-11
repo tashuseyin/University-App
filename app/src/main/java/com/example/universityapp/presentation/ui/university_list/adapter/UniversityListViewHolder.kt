@@ -7,8 +7,12 @@ import com.example.universityapp.databinding.UniversityItemCardBinding
 class UniversityListViewHolder(private val binding: UniversityItemCardBinding) :
     RecyclerView.ViewHolder(binding.root) {
 
-    fun bind(universityItem: UniversityItem) {
+    fun bind(universityItem: UniversityItem, onItemClickListener: ((Int) -> Unit)?) {
         binding.result = universityItem
         binding.executePendingBindings()
+
+        binding.universityItemCard.setOnClickListener {
+            onItemClickListener?.invoke(universityItem.id!!)
+        }
     }
 }

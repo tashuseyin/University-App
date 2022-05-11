@@ -10,14 +10,14 @@ import com.example.universityapp.R
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.presentation.MainActivity
-import com.example.universityapp.viewmodel.UniversityListViewModel
+import com.example.universityapp.viewmodel.SharedViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
 @SuppressLint("CustomSplashScreen")
 @AndroidEntryPoint
 class SplashActivity : AppCompatActivity() {
-    private val mainViewModel: UniversityListViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,29 +28,14 @@ class SplashActivity : AppCompatActivity() {
 
     private fun requestGlobalToken() {
         lifecycleScope.launch {
-            mainViewModel.getGlobalToken()
-            mainViewModel.tokenResponse.observe(this@SplashActivity) { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        val token = Constant.BEARER + result.data!!.access_token
-                        Intent(
-                            this@SplashActivity,
-                            MainActivity::class.java
-                        ).also {
-                            startActivity(it)
-                        }
-                    }
-
-                    is Resource.Error -> {
-                        Intent(
-                            this@SplashActivity,
-                            MainActivity::class.java
-                        ).also {
-                            startActivity(it)
-                        }
-                    }
+            sharedViewModel.getGlobalToken(sharedViewModel.applyGlobalTokenQueries())
+            sharedViewModel.tokenResponse.observe(this@SplashActivity) { response ->
+                if (response is Resource.Success) {
+                    val globalToken = Constant.BEARER + response.data!!.access_token
+                    sharedViewModel.saveGlobalToken(globalToken)
                 }
             }
+            startActivity(Intent(this@SplashActivity, MainActivity::class.java))
         }
     }
 

@@ -19,7 +19,4 @@ interface UniversityApi {
     @GET(UNIVERSITY_URL)
     suspend fun getUniversityList(@Header(QUERY_AUTHORIZATION) authorization: String): Response<UniversityData>
 
-
-
-
 }
