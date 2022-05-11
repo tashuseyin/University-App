@@ -37,7 +37,6 @@ class SplashActivity : AppCompatActivity() {
                             this@SplashActivity,
                             MainActivity::class.java
                         ).also {
-                            it.putExtra(Constant.GLOBAL_TOKEN, token)
                             startActivity(it)
                         }
                     }

@@ -28,6 +28,7 @@ class DataStoreRepository @Inject constructor(
     private object PreferenceKeys {
         val userToken = stringPreferencesKey(PREFERENCES_TOKEN)
     }
+
     private val dataStore: DataStore<Preferences> = context.dataStore
 
     suspend fun saveToken(token: String) {
@@ -35,6 +36,7 @@ class DataStoreRepository @Inject constructor(
             preferences[PreferenceKeys.userToken] = token
         }
     }
+
     val readToken: Flow<String> = dataStore.data
         .catch { exception ->
             if (exception is IOException) {

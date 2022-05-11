@@ -6,20 +6,33 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
+import com.example.universityapp.data.data_store.DataStoreRepository
 import com.example.universityapp.data.model.token.TokenData
 import com.example.universityapp.data.model.university.UniversityData
 import com.example.universityapp.data.repository.UniversityRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
     application: Application,
+    private val dataStoreRepository: DataStoreRepository,
     private val repository: UniversityRepository
 ) : AndroidViewModel(application) {
+
+
+    val readGlobalToken = dataStoreRepository.readToken.asLiveData()
+
+    private fun saveGlobalToken(globalToken: String) = viewModelScope.launch {
+        dataStoreRepository.saveToken(globalToken)
+    }
+
 
     private val _tokenResponse: MutableLiveData<Resource<TokenData>> = MutableLiveData()
     val tokenResponse get() = _tokenResponse
@@ -30,6 +43,8 @@ class MainViewModel @Inject constructor(
             try {
                 val response = repository.getGlobalToken(applyTokenQueries())
                 _tokenResponse.value = Resource.Success(response.body()!!)
+                val globalToken = Constant.BEARER + response.body()!!.access_token
+                saveGlobalToken(globalToken)
             } catch (e: Exception) {
                 _tokenResponse.value =
                     Resource.Error(e.localizedMessage ?: "An unexpected error occurred")

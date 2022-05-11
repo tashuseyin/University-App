@@ -28,9 +28,17 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val globalToken = requireActivity().intent.getStringExtra(Constant.GLOBAL_TOKEN)
-        requestUniversityData(globalToken.toString())
+        requestApi()
     }
+
+    private fun requestApi() {
+        lifecycleScope.launch {
+            mainViewModel.readGlobalToken.observe(viewLifecycleOwner) { token ->
+                requestUniversityData(token)
+            }
+        }
+    }
+
 
     private fun requestUniversityData(token: String) {
         lifecycleScope.launch {
