@@ -12,6 +12,7 @@ import androidx.navigation.fragment.navArgs
 import androidx.viewbinding.ViewBinding
 import com.example.universityapp.R
 import com.example.universityapp.common.BindingFragment
+import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.databinding.FragmentLoginBinding
 import com.example.universityapp.util.Utils.showErrorSnackBar
@@ -84,6 +85,8 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
                         is Resource.Success -> {
                             binding.progressbar.isVisible = false
                             sharedViewModel.saveUserInfo(username, password)
+                            val globalToken = Constant.BEARER + result.data!!.access_token
+                            sharedViewModel.saveGlobalToken(globalToken)
                             findNavController().navigate(
                                 LoginFragmentDirections.actionLoginFragmentToUniversityDetail(
                                     args.uniTitle,

@@ -11,7 +11,7 @@ class UniversityItemRowBinding {
         @JvmStatic
         fun loadImageFromUrl(imageView: ImageView, imageUrl: String) {
             imageView.load(imageUrl) {
-                crossfade(600)
+                crossfade(300)
                 error(R.drawable.ic_error_palceholder)
             }
         }

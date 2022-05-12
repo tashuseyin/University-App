@@ -14,5 +14,6 @@
     <string name="username">Username</string>
     <string name="error_message_email">Please enter email.</string>
     <string name="error_message_password">Please enter password.</string>
+    <string name="sections">Sections</string>
 
 </resources>

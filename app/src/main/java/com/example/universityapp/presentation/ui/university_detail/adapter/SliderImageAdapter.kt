@@ -5,9 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.universityapp.databinding.SliderImageContainerBinding
 
-class SliderImageAdapter(
-    private val imageList: List<Int>
-) : RecyclerView.Adapter<SliderImageAdapter.SliderImageViewHolder>() {
+class SliderImageAdapter : RecyclerView.Adapter<SliderImageAdapter.SliderImageViewHolder>() {
+    private var imageList = emptyList<Int>()
 
     inner class SliderImageViewHolder(private val binding: SliderImageContainerBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -27,4 +26,8 @@ class SliderImageAdapter(
     }
 
     override fun getItemCount() = imageList.size
+
+    fun setData(newData: List<Int>) {
+        this.imageList = newData
+    }
 }
