@@ -38,7 +38,12 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
     private fun setListener() {
         binding.apply {
             loginButton.setOnClickListener {
-                requestLoginSubmit()
+                if (validateLoginDetails()) {
+                    val username = binding.username.text.toString().trim { it <= ' ' }
+                    val password = binding.password.text.toString().trim { it <= ' ' }
+                    sharedViewModel.saveUserInfo(username, password)
+                    requestLoginSubmit(username, password)
+                }
             }
         }
     }
@@ -63,37 +68,31 @@ class LoginFragment : BindingFragment<FragmentLoginBinding>() {
         }
     }
 
-
-    private fun requestLoginSubmit() {
-        if (validateLoginDetails()) {
-            val username = binding.username.text.toString().trim { it <= ' ' }
-            val password = binding.password.text.toString().trim { it <= ' ' }
-            lifecycleScope.launch {
-                sharedViewModel.getGlobalToken(
-                    sharedViewModel.applyLoginTokenQueries(
-                        username,
-                        password
-                    )
+    private fun requestLoginSubmit(username: String, password: String) {
+        lifecycleScope.launch {
+            sharedViewModel.getGlobalToken(
+                sharedViewModel.applyLoginTokenQueries(
+                    username,
+                    password
                 )
-                sharedViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
-                    when (result) {
-                        is Resource.Loading -> binding.progressbar.isVisible = true
-                        is Resource.Error -> {
-                            binding.progressbar.isVisible = false
-                            showErrorSnackBar(requireActivity(), result.message.toString(), true)
-                        }
-                        is Resource.Success -> {
-                            binding.progressbar.isVisible = false
-                            sharedViewModel.saveUserInfo(username, password)
-                            val globalToken = Constant.BEARER + result.data!!.access_token
-                            sharedViewModel.saveGlobalToken(globalToken)
-                            findNavController().navigate(
-                                LoginFragmentDirections.actionLoginFragmentToUniversityDetail(
-                                    args.uniTitle,
-                                    args.uniId
-                                )
+            )
+            sharedViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
+                when (result) {
+                    is Resource.Loading -> binding.progressbar.isVisible = true
+                    is Resource.Error -> {
+                        binding.progressbar.isVisible = false
+                        showErrorSnackBar(requireActivity(), result.message.toString(), true)
+                    }
+                    is Resource.Success -> {
+                        binding.progressbar.isVisible = false
+                        val loginToken = Constant.BEARER + result.data!!.access_token
+                        sharedViewModel.saveLoginToken(loginToken)
+                        findNavController().navigate(
+                            LoginFragmentDirections.actionLoginFragmentToUniversityDetail(
+                                args.uniTitle,
+                                args.uniId
                             )
-                        }
+                        )
                     }
                 }
             }

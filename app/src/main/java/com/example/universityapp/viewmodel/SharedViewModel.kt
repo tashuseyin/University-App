@@ -24,10 +24,16 @@ class SharedViewModel @Inject constructor(
 ) : AndroidViewModel(application) {
 
 
-    val readGlobalToken = dataStoreRepository.readToken.asLiveData()
+    val readGlobalToken = dataStoreRepository.readGlobalToken.asLiveData()
 
     fun saveGlobalToken(globalToken: String) = viewModelScope.launch {
-        dataStoreRepository.saveToken(globalToken)
+        dataStoreRepository.saveGlobalToken(globalToken)
+    }
+
+    val readLoginToken = dataStoreRepository.readLoginToken.asLiveData()
+
+    fun saveLoginToken(loginToken: String) = viewModelScope.launch {
+        dataStoreRepository.saveLoginToken(loginToken)
     }
 
     val readLoginStatus = dataStoreRepository.readLoginStatus.asLiveData()

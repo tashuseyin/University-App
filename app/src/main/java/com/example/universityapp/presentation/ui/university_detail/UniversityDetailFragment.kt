@@ -7,7 +7,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewbinding.ViewBinding
 import com.example.universityapp.common.BindingFragment
 import com.example.universityapp.common.Constant
@@ -37,13 +36,7 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val linearLayoutManager = object : LinearLayoutManager(context) {
-            override fun canScrollVertically(): Boolean {
-                return false
-            }
-        }
-        binding.recyclerview.layoutManager = linearLayoutManager
-
+        changeLoginStatus()
         requestApi()
     }
 
@@ -54,10 +47,16 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
         TabLayoutMediator(binding.tabLayout, binding.viewPager) { _, _ -> }.attach()
     }
 
+    private fun changeLoginStatus() {
+        lifecycleScope.launch {
+            sharedViewModel.saveLoginStatus(true)
+        }
+    }
+
 
     private fun requestApi() {
         lifecycleScope.launch {
-            sharedViewModel.readGlobalToken.observe(viewLifecycleOwner) { token ->
+            sharedViewModel.readLoginToken.observe(viewLifecycleOwner) { token ->
                 requestUniversityData(args.uniId, token)
             }
         }
@@ -77,6 +76,7 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
                         } else {
                             binding.progressBar.isVisible = false
                             binding.errorImage.isVisible = true
+                            binding.errorText.isVisible = true
                             binding.errorText.text = result.message
                         }
                     }
@@ -84,7 +84,7 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
                         binding.progressBar.isVisible = false
                         result.data?.data?.let {
                             setUniversityDetailView(it)
-                            adapter.setData(result.data.data.majorDetail!! )
+                            adapter.setData(result.data.data.majorDetail!!)
                             binding.recyclerview.adapter = adapter
                         }
                     }
