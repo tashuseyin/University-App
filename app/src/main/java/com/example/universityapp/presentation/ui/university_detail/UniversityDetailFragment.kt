@@ -12,6 +12,7 @@ import com.example.universityapp.common.BindingFragment
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.data.model.university_detail.Data
+import com.example.universityapp.data.model.university_detail.Image
 import com.example.universityapp.databinding.FragmentUniversityDetailBinding
 import com.example.universityapp.presentation.ui.university_detail.adapter.SliderImageAdapter
 import com.example.universityapp.presentation.ui.university_detail.adapter.UniversitySectionAdapter
@@ -40,7 +41,7 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
         requestApi()
     }
 
-    private fun sliderImage(imageList: List<Int>) {
+    private fun sliderImage(imageList: List<Image>) {
         sliderAdapter.setData(imageList)
         binding.viewPager.adapter = sliderAdapter
 
@@ -82,9 +83,10 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
                     }
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
-                        result.data?.data?.let {
-                            setUniversityDetailView(it)
-                            adapter.setData(result.data.data.majorDetail!!)
+                        result.data?.data?.let { data ->
+                            setUniversityDetailView(data)
+                            data.images?.let { sliderImage(it) }
+                            adapter.setData(data.majorDetail!!)
                             binding.recyclerview.adapter = adapter
                         }
                     }
