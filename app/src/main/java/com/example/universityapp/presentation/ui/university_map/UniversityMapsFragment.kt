@@ -1,8 +1,13 @@
 package com.example.universityapp.presentation.ui.university_map
 
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,6 +26,8 @@ import com.example.universityapp.viewmodel.UniversityListViewModel
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptor
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
@@ -83,6 +90,16 @@ class UniversityMapsFragment : BindingFragment<FragmentUniversityMapsBinding>(),
                         binding.progressBar.isVisible = false
                         result.data?.data?.let { universityList ->
                             initMarker(universityList)
+
+
+                            map.setOnInfoWindowClickListener { marker ->
+                                universityList.filter {
+                                    marker.title == it.name
+                                }.also {
+                                    navigateFragment(it[0].name!!, it[0].id!!)
+                                }
+                            }
+
                         }
                     }
                 }
@@ -116,9 +133,36 @@ class UniversityMapsFragment : BindingFragment<FragmentUniversityMapsBinding>(),
             it.url!!.isNotEmpty()
         }.forEach {
             val location = LatLng(it.lat!!, it.lng!!)
-            map.addMarker(MarkerOptions().position(location).title(it.name))
+            map.addMarker(
+                MarkerOptions().position(location)
+                    .title(it.name)
+                    .icon(
+                        fromVectorToBitmap(
+                            R.drawable.ic_school_marker
+                        )
+                    )
+            )
         }
     }
+
+    private fun fromVectorToBitmap(id: Int): BitmapDescriptor {
+        val vectorDrawable: Drawable? = ResourcesCompat.getDrawable(resources, id, null)
+        if (vectorDrawable == null) {
+            Log.d("MapsActivity", "Resource not found")
+            return BitmapDescriptorFactory.defaultMarker()
+        }
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable.intrinsicWidth,
+            vectorDrawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable.setBounds(0, 0, canvas.width, canvas.height)
+        vectorDrawable.draw(canvas)
+        return BitmapDescriptorFactory.fromBitmap(bitmap)
+
+    }
+
 
     private fun navigateFragment(uniTitle: String, uniId: Int) {
         (activity as MainActivity).hideBottomNavigation()

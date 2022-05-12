@@ -17,5 +17,6 @@
     <string name="sections">Sections</string>
 
     <string name="google_maps_api_key">AIzaSyBd636cAIJAJrPhKyzhKJxWuYpqJw_UsCg</string>
+    <string name="detay">Detay</string>
 
 </resources>
