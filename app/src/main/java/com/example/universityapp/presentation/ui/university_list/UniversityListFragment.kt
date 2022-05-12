@@ -80,6 +80,7 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
                             binding.errorText.isVisible = false
                             requestGlobalToken()
                         } else {
+                            binding.progressbar.isVisible = false
                             binding.errorImage.isVisible = true
                             binding.errorText.text = result.message
                         }

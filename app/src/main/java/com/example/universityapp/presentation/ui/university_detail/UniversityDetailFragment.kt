@@ -85,12 +85,12 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
                     }
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
-                        binding.constraint.isVisible = true
                         result.data?.data?.let { data ->
                             setUniversityDetailView(data)
                             data.images?.let { sliderImage(it) }
                             adapter.setData(data.majorDetail!!)
                             binding.recyclerview.adapter = adapter
+                            binding.constraint.isVisible = true
                         }
                     }
                 }
@@ -126,7 +126,6 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
                     }
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
-                        binding.constraint.isVisible = true
                         val token = Constant.BEARER + result.data!!.access_token
                         requestUniversityData(args.uniId, token)
                     }

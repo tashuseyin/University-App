@@ -6,6 +6,7 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.example.universityapp.R
 import com.example.universityapp.common.BindingFragment
@@ -13,6 +14,7 @@ import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
 import com.example.universityapp.data.model.university.UniversityItem
 import com.example.universityapp.databinding.FragmentUniversityMapsBinding
+import com.example.universityapp.presentation.MainActivity
 import com.example.universityapp.util.Utils
 import com.example.universityapp.viewmodel.SharedViewModel
 import com.example.universityapp.viewmodel.UniversityListViewModel
@@ -115,6 +117,25 @@ class UniversityMapsFragment : BindingFragment<FragmentUniversityMapsBinding>(),
         }.forEach {
             val location = LatLng(it.lat!!, it.lng!!)
             map.addMarker(MarkerOptions().position(location).title(it.name))
+        }
+    }
+
+    private fun navigateFragment(uniTitle: String, uniId: Int) {
+        (activity as MainActivity).hideBottomNavigation()
+        sharedViewModel.readLoginStatus.observe(viewLifecycleOwner) { loginStatus ->
+            if (!loginStatus) {
+                findNavController().navigate(
+                    UniversityMapsFragmentDirections.actionUniversityMapToLoginFragment(
+                        uniTitle, uniId
+                    )
+                )
+            } else {
+                findNavController().navigate(
+                    UniversityMapsFragmentDirections.actionUniversityMapToUniversityDetail(
+                        uniTitle, uniId
+                    )
+                )
+            }
         }
     }
 }

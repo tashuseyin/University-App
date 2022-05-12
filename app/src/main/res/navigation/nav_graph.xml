@@ -52,5 +52,12 @@
         android:id="@+id/university_map"
         android:name="com.example.universityapp.presentation.ui.university_map.UniversityMapsFragment"
         android:label="@string/university_map_label"
-        tools:layout="@layout/fragment_university_maps" />
+        tools:layout="@layout/fragment_university_maps" >
+        <action
+            android:id="@+id/action_university_map_to_university_detail"
+            app:destination="@id/university_detail" />
+        <action
+            android:id="@+id/action_university_map_to_loginFragment"
+            app:destination="@id/loginFragment" />
+    </fragment>
 </navigation>
