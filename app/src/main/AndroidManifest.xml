@@ -14,12 +14,17 @@
         android:supportsRtl="true"
         android:theme="@style/SplashScreen"
         android:usesCleartextTraffic="true">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_api_key" />
+
         <activity
             android:name=".presentation.MainActivity"
             android:exported="false"
             android:theme="@style/Theme.UniversityApp" />
         <activity
-            android:name="com.example.universityapp.presentation.ui.splash.SplashActivity"
+            android:name=".presentation.ui.splash.SplashActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

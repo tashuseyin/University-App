@@ -50,7 +50,7 @@
     </fragment>
     <fragment
         android:id="@+id/university_map"
-        android:name="com.example.universityapp.presentation.ui.university_map.UniversityMapFragment"
+        android:name="com.example.universityapp.presentation.ui.university_map.UniversityMapsFragment"
         android:label="@string/university_map_label"
-        tools:layout="@layout/fragment_universtiy_map" />
+        tools:layout="@layout/fragment_university_maps" />
 </navigation>

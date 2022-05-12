@@ -1,4 +1,4 @@
-package com.example.universityapp.presentation.ui.university_list
+package com.example.universityapp.presentation.ui.university_map
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,56 +6,47 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
+import com.example.universityapp.R
 import com.example.universityapp.common.BindingFragment
 import com.example.universityapp.common.Constant
 import com.example.universityapp.common.Resource
-import com.example.universityapp.databinding.FragmentUniversityListBinding
-import com.example.universityapp.presentation.MainActivity
-import com.example.universityapp.presentation.ui.university_list.adapter.UniversityListAdapter
+import com.example.universityapp.data.model.university.UniversityItem
+import com.example.universityapp.databinding.FragmentUniversityMapsBinding
+import com.example.universityapp.util.Utils
 import com.example.universityapp.viewmodel.SharedViewModel
 import com.example.universityapp.viewmodel.UniversityListViewModel
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-
 @AndroidEntryPoint
-class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() {
+class UniversityMapsFragment : BindingFragment<FragmentUniversityMapsBinding>(),
+    OnMapReadyCallback {
     private val universityListViewModel: UniversityListViewModel by viewModels()
     private val sharedViewModel: SharedViewModel by viewModels()
-    private val adapter = UniversityListAdapter()
+    private lateinit var map: GoogleMap
 
     override val bindingInflater: (LayoutInflater) -> ViewBinding
-        get() = FragmentUniversityListBinding::inflate
+        get() = FragmentUniversityMapsBinding::inflate
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+        mapFragment?.getMapAsync(this)
+    }
 
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        map.mapType = GoogleMap.MAP_TYPE_NORMAL
         requestApi()
-        navigateFragment()
     }
 
-    private fun navigateFragment() {
-        adapter.onItemClickListener = { uniId, uniTitle ->
-            (activity as MainActivity).hideBottomNavigation()
-            sharedViewModel.readLoginStatus.observe(viewLifecycleOwner) { loginStatus ->
-                if (!loginStatus) {
-                    findNavController().navigate(
-                        UniversityListFragmentDirections.actionUniversityListToLoginFragment(
-                            uniTitle, uniId
-                        )
-                    )
-                } else {
-                    findNavController().navigate(
-                        UniversityListFragmentDirections.actionUniversityListToUniversityDetail(
-                            uniTitle, uniId
-                        )
-                    )
-                }
-            }
-        }
-    }
 
     private fun requestApi() {
         lifecycleScope.launch {
@@ -72,24 +63,25 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             universityListViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        binding.progressbar.isVisible = true
+                        binding.progressBar.isVisible = true
                     }
                     is Resource.Error -> {
-                        binding.errorImage.isVisible = false
+                        binding.progressBar.isVisible = false
                         if (result.message == "Token Expire") {
-                            binding.errorText.isVisible = false
                             requestGlobalToken()
                         } else {
-                            binding.errorImage.isVisible = true
-                            binding.errorText.text = result.message
+                            Utils.showErrorSnackBar(
+                                requireActivity(),
+                                result.message.toString(),
+                                true
+                            )
                         }
                     }
                     is Resource.Success -> {
-                        binding.progressbar.isVisible = false
-                        adapter.setData(result.data!!.data!!.filter {
-                            it.url!!.isNotEmpty()
-                        })
-                        binding.recyclerview.adapter = adapter
+                        binding.progressBar.isVisible = false
+                        result.data?.data?.let { universityList ->
+                            initMarker(universityList)
+                        }
                     }
                 }
             }
@@ -102,15 +94,13 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             sharedViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        binding.progressbar.isVisible = true
+                        binding.progressBar.isVisible = true
                     }
                     is Resource.Error -> {
-                        binding.progressbar.isVisible = false
-                        binding.errorText.text = result.message
-                        binding.errorImage.isVisible = true
+                        Utils.showErrorSnackBar(requireActivity(), result.message.toString(), true)
                     }
                     is Resource.Success -> {
-                        binding.progressbar.isVisible = false
+                        binding.progressBar.isVisible = false
                         val token = Constant.BEARER + result.data!!.access_token
                         requestUniversityData(token)
                     }
@@ -119,9 +109,12 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
         }
     }
 
-    override fun onResume() {
-        super.onResume()
-        (activity as MainActivity).showBottomNavigation()
+    private fun initMarker(universityList: List<UniversityItem>) {
+        universityList.filter {
+            it.url!!.isNotEmpty()
+        }.forEach {
+            val location = LatLng(it.lat!!, it.lng!!)
+            map.addMarker(MarkerOptions().position(location).title(it.name))
+        }
     }
 }
-
