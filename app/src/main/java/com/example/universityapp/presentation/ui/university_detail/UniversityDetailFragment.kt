@@ -69,6 +69,9 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
             universityDetailViewModel.getUniversityDetail(uniId, token)
             universityDetailViewModel.universityDetailResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
+                    is Resource.Loading -> {
+                        binding.progressBar.isVisible = true
+                    }
                     is Resource.Error -> {
                         if (result.message == "Token Expire") {
                             binding.errorImage.isVisible = false
@@ -77,12 +80,12 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
                         } else {
                             binding.progressBar.isVisible = false
                             binding.errorImage.isVisible = true
-                            binding.errorText.isVisible = true
                             binding.errorText.text = result.message
                         }
                     }
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
+                        binding.constraint.isVisible = true
                         result.data?.data?.let { data ->
                             setUniversityDetailView(data)
                             data.images?.let { sliderImage(it) }
@@ -113,6 +116,9 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
             )
             sharedViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
+                    is Resource.Loading -> {
+                        binding.progressBar.isVisible = true
+                    }
                     is Resource.Error -> {
                         binding.progressBar.isVisible = false
                         binding.errorText.text = result.message
@@ -120,6 +126,7 @@ class UniversityDetailFragment : BindingFragment<FragmentUniversityDetailBinding
                     }
                     is Resource.Success -> {
                         binding.progressBar.isVisible = false
+                        binding.constraint.isVisible = true
                         val token = Constant.BEARER + result.data!!.access_token
                         requestUniversityData(args.uniId, token)
                     }

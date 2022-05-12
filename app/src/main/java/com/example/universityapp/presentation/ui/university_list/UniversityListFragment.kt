@@ -71,6 +71,9 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             universityListViewModel.getUniversityList(token)
             universityListViewModel.universityListResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
+                    is Resource.Loading -> {
+                        binding.progressbar.isVisible = true
+                    }
                     is Resource.Error -> {
                         if (result.message == "Token Expire") {
                             binding.errorImage.isVisible = false
@@ -99,6 +102,9 @@ class UniversityListFragment : BindingFragment<FragmentUniversityListBinding>() 
             sharedViewModel.getGlobalToken(sharedViewModel.applyGlobalTokenQueries())
             sharedViewModel.tokenResponse.observe(viewLifecycleOwner) { result ->
                 when (result) {
+                    is Resource.Loading -> {
+                        binding.progressbar.isVisible = false
+                    }
                     is Resource.Error -> {
                         binding.progressbar.isVisible = false
                         binding.errorText.text = result.message
